@@ -13,10 +13,10 @@ fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4).unwrap();
        
-    for stream in listener.incoming().take(2) {
+    for stream in listener.incoming() {
         let stream = stream.unwrap();
-
-        pool.execute(|| {
+        
+         pool.execute(|| {
             handle_connection(stream);
         });
     }
@@ -26,7 +26,7 @@ fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 512];
     stream.read(&mut buffer).unwrap();
 
-    // println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+    println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
 
     let get = b"GET / HTTP/1.1\r\n";
     let sleep = b"GET /sleep HTTP/1.1\r\n";
